@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+    <div id="app1">
+      <h1 ref="heading">{{ title }}</h1>
+      <button v-on:click="show" ref="myButton">Show Paragraph</button>
+      <p v-if="showParagraph"></p>
+    </div>
+    <div id="app2">
+      <h1>{{ title }}</h1>
+      <button @click="onChange">Change something in Vue 1</button>
+      <hello></hello>
+      <hello></hello>
+    </div>
+    <div id="app3"></div>
+  </body>
+</html>
+
+<script>
+  var data = {
+    title: 'The VueJS Instance',
+    showParagraph: false
+  };
+
+  Vue.component('hello', {
+    template: '<h1>Hello!</h1>'
+  });
+
+  var vm1 = new Vue({
+    data: data,
+    methods: {
+      show: function() {
+        this.showParagraph = true;
+        this.updateTitle('The VueJS Instance (updated)');
+        console.log(this.$refs.myButton);
+        this.$refs.myButton.innerText = 'test';
+      },
+      updateTitle: function(title) {
+        this.title = title;
+      }
+    },
+    computed: {
+      lowercaseTitle: function() {
+        return this.title.toLowerCase();
+      }
+    },
+    watch: {
+      title: function(value) {
+        alert('Title changed, new value ' + value);
+      }
+    }
+  });
+
+  // Alternative to 'el' property
+  vm1.$mount('#app1');
+
+  vm1.newProp = 'New!';
+  console.log(vm1);
+  console.log(vm1.$data);
+  vm1.$refs.heading.innerText = 'Something else';
+
+  setTimeout(function() {
+    vm1.title = 'Changed by timer';
+    vm1.show();
+  }, 3000);
+
+  var vm2 = new Vue({
+    el: '#app2',
+    data: {
+      title: 'The second instance'
+    },
+    methods: {
+      onChange: function() {
+        vm1.title = 'Changed!';
+      }
+    }
+  });
+
+  var vm3 = new Vue({
+    el: 'hell',
+    template: '<h1>Hello!</h1>'
+  });
+
+  // Mount with vanilla JS
+  vm3.$mount();
+  document.getElementById('app3').appendChild(vm3.$el);
+</script>

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script src="../vue.js"></script>
+  </head>
+  <body>
+    <div id="exercise">
+      <!-- 1) Start the Effect with the Button. The Effect should alternate the "highlight" or "shrink" class on each new setInterval tick (attach respective class to the div with id "effect" below) -->
+      <div>
+        <button @click="startEffect">Start Effect</button>
+        <div id="effect" :class="effectClass"></div>
+      </div>
+      <!-- 2) Create a couple of CSS classes and attach them via the array syntax -->
+      <div :class="['text-bold', 'text-blue', 'text-uppercase', 'my-1']">
+        I got no class :(
+      </div>
+      <!-- 3) Let the user enter a class (create some example classes) and attach it -->
+      <div>
+        <input type="text" v-model="userClass" />
+        <div :class="userClass"></div>
+      </div>
+      <!-- 4) Let the user enter a class and enter true/ false for another class (create some example classes) and attach the classes -->
+      <div>
+        <input type="text" v-model="userClassTwo" />
+        <input type="text" v-model="assignedClassEnabled" />
+        <div
+          :class="[{'box-biggest': assignedClassEnabled}, userClassTwo]"
+        ></div>
+      </div>
+      <!-- 5) Repeat 3) but now with values for styles (instead of class names). Attach the respective styles.  -->
+      <div>
+        <input type="text" v-model="userStyle"/>
+        <div :style="userStyle"></div>
+      </div>
+      <!-- 6) Create a simple progress bar with setInterval and style bindings. Start it by hitting the below button. -->
+      <div>
+        <button @click="startProgress">Start Progress</button>
+        <div :style="progressStyle"></div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  new Vue({
+    el: "#exercise",
+    data: {
+      effectClass: {
+        highlight: false,
+        shrink: false
+      },
+      userClass: "green-box",
+      userClassTwo: "orange-box",
+      assignedClassEnabled: false,
+      userStyle: "",
+      progressStyle: {width: '0px', height : '20px', backgroundColor: ''},
+      pxVal: 0,
+    },
+    methods: {
+      startEffect: function() {
+        this.effectClass.highlight = true;
+        var that = this;
+        setInterval(function() {
+          that.effectClass.highlight = !that.effectClass.highlight;
+          that.effectClass.shrink = !that.effectClass.highlight;
+        }, 2000);
+      },
+      startProgress: function() {
+        this.progressStyle.backgroundColor = 'green';
+        this.progressStyle.width = '0px';
+        this.pxVal = 0;
+        var that = this;
+        setInterval(function() {
+            if (that.pxVal < 400) {
+                that.pxVal += 0.5;
+                that.progressStyle.width = that.pxVal + 'px';
+            }
+        }, 1)
+      },
+    }
+  });
+</script>
+
+<style>
+  #effect {
+    width: 100px;
+    height: 100px;
+    border: 1px solid black;
+  }
+  .highlight {
+    background-color: red;
+    width: 200px !important;
+  }
+  .shrink {
+    background-color: gray;
+    width: 50px !important;
+  }
+  .text-bold {
+    font-weight: bold;
+  }
+  .text-blue {
+    color: blue;
+  }
+  .text-uppercase {
+    text-transform: uppercase;
+  }
+  .my-1 {
+    margin: 10px 0;
+  }
+  .orange-box {
+    width: 20px;
+    height: 20px;
+    background-color: orange;
+  }
+  .green-box {
+    width: 20px;
+    height: 20px;
+    background-color: green;
+  }
+  .box-bigger {
+    width: 50px;
+    height: 50px;
+  }
+  .box-biggest {
+    width: 200px;
+    height: 200px;
+    border: 2px solid gray;
+  }
+</style>
